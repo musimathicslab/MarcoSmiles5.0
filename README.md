@@ -11,14 +11,15 @@ In particular, by using a gesture recognition module to associate hand positions
 ## Prerequisites
 On the Windows computer:
 - Python 3.7.9;
-- Pandas 1.1.4;
-- Numpy 1.18.0;
-- Scikit 0.23.2;
-- Matplotlib 3.3.3;
+  - Pandas 1.1.4;
+  - Numpy 1.18.0;
+  - Scikit 0.23.2;
+  - Matplotlib 3.3.3;
 - [LeapMotion SDK v5.12](https://developer.leapmotion.com/tracking-software-download).
 - [LoopMidi](https://www.tobias-erichsen.de/software/loopmidi.html). Create a virtual MIDI port with the name `MarcoSmiles` (it's essential to give this name to the port in order to give the possibility to the MIDI management module to find this virtual MIDI port).
 
 It's also necessary to use a RaspberryPi 3. If you don't have a RaspberryPi already configured, follow the guide in the `Raspberry` folder.
+
 ## Use it
 
 
