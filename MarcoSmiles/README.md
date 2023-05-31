@@ -9,10 +9,10 @@
   - numpy 1.18.0;
   - scikit-learn 0.23.2;
   - matplotlib 3.3.3;
-- [LeapMotion SDK v5.12](https://developer.leapmotion.com/tracking-software-download).
+- [LeapMotion SDK v5.12](https://developer.leapmotion.com/tracking-software-download);
 - [LoopMidi](https://www.tobias-erichsen.de/software/loopmidi.html). Create a virtual MIDI port with the name `MarcoSmiles` (it's essential to give this name to the port in order to give the possibility to the MIDI management module to find this virtual MIDI port);
 - [Unity Engine 2021.3.15f1](https://unity.com/download);
-- Visual Studio with the "Game development with Unity" package (during UnityEngine installation);
+- Visual Studio with the "Game development with Unity" package (during UnityEngine installation).
 
 ## Installation
 
@@ -23,7 +23,7 @@
 5. In `Edit -> Project Settings` go to `Project -> Package Manager` insert the following information in the `Scoped Registries` section:
    1. Name: "Ultraleap";
    2. URL: "https://package.openupm.com";
-   3. Scope(s): "com.ultraleap"
+   3. Scope(s): "com.ultraleap".
 6. Click `Save`. In `Window -> Package Manager` select the `Packages: My Registries` and install `Ultraleap Tracking`.
 7. Go into the `Project` section, and find the folder `Own/Scenes` folder. Select the `MainPage` scene, go into `File -> Build settings` and click `Add Open Scenes`. Repeat this process for each scene in this order:
    1. PlayScene;

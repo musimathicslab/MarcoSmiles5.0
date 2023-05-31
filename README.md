@@ -15,7 +15,7 @@ On the Windows computer:
   - numpy 1.18.0;
   - scikit-learn 0.23.2;
   - matplotlib 3.3.3;
-- [LeapMotion SDK v5.12](https://developer.leapmotion.com/tracking-software-download).
+- [LeapMotion SDK v5.12](https://developer.leapmotion.com/tracking-software-download);
 - [LoopMidi](https://www.tobias-erichsen.de/software/loopmidi.html). Create a virtual MIDI port with the name `MarcoSmiles` (it's essential to give this name to the port in order to give the possibility to the MIDI management module to find this virtual MIDI port).
 
 It's also necessary to use a RaspberryPi 3. If you don't have a RaspberryPi already configured, follow the guide in the `Raspberry` folder.
