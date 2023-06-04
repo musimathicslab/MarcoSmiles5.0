@@ -2,55 +2,63 @@
 
 [System.Serializable]
 ///<summary>
-/// Incapsula i dati relativi alla configurazione di una mano.
+/// Encapsulates data on the configuration of a hand.
 ///</summary>
-public class DataToStore
-{
+public class DataToStore {
     /// <summary>
-    /// Informazioni sulla mano relativa ai dati da salvare
+    /// Information on the data hand to be saved.
     /// </summary>
     public Hand hand { get; set; }
+
     /// <summary>
-    /// FF pollice
+    /// FF thumb.
     /// </summary>
     public float FF1 { get; set; }
+
     /// <summary>
-    /// FF indice
+    /// FF index.
     /// </summary>
     public float FF2 { get; set; }
+
     /// <summary>
-    /// FF medio
+    /// FF middle.
     /// </summary>
     public float FF3 { get; set; }
+
     /// <summary>
-    /// FF anulare
+    /// FF ring.
     /// </summary>
     public float FF4 { get; set; }
+
     /// <summary>
-    /// FF mignolo
+    /// FF little.
     /// </summary>
     public float FF5 { get; set; }
+
     /// <summary>
-    /// NFA pollice-indice
+    /// NFA thumb-index.
     /// </summary>
     public float NFA1 { get; set; }
+
     /// <summary>
-    /// NFA indice-medio
+    /// NFA index-middle.
     /// </summary>
     public float NFA2 { get; set; }
+
     /// <summary>
-    /// NFA medio anulare
+    /// NFA middle-ring.
     /// </summary>
     public float NFA3 { get; set; }
+
     /// <summary>
-    /// NFA anulare mignolo
+    /// NFA ring-little.
     /// </summary>
     public float NFA4 { get; set; }
 
     /// <summary>
-    /// Costruttore
+    /// Constructor.
     /// </summary>
-    /// <param name="hand">Informazioni sulla mano relativa ai dati da salvare</param>
+    /// <param name="hand">Information on the data hand to be saved.</param>
     /// <param name="FF1"><paramref name="FF1"/></param>
     /// <param name="FF2"><paramref name="FF2"/></param>
     /// <param name="FF3"><paramref name="FF3"/></param>
@@ -60,8 +68,7 @@ public class DataToStore
     /// <param name="NFA2"><paramref name="NFA2"/></param>
     /// <param name="NFA3"><paramref name="NFA3"/></param>
     /// <param name="NFA4"><paramref name="NFA4"/></param>
-    public DataToStore(Hand hand, float FF1, float FF2, float FF3, float FF4, float FF5, float NFA1, float NFA2, float NFA3, float NFA4)
-    {
+    public DataToStore(Hand hand, float FF1, float FF2, float FF3, float FF4, float FF5, float NFA1, float NFA2, float NFA3, float NFA4){
         this.hand = hand;
 
         this.FF1 = FF1;
@@ -76,8 +83,7 @@ public class DataToStore
         this.NFA4 = NFA4;
     }
 
-    public override string ToString()
-    {
+    public override string ToString(){
         return base.ToString() +
             $" Hand: {hand}," +
             $" FF1: {FF1}"+
@@ -90,5 +96,4 @@ public class DataToStore
             $" NFA3: {NFA3}"+
             $" NFA4: {NFA4}";
     }
-
 }
