@@ -6,75 +6,78 @@ using System.Linq;
 using UnityEngine;
 
 /// <summary>
-/// Classe statica che gestisce le operazioni riguardanti il machine learning e mantiene lo stato della rete neurale per la configurazione selezionata.
+/// Class to perform machine learning operations.
 /// </summary>
 public static class TestML
 {
     private static int delaytime = 12;
     private static int counter = -1;
-    private static int oldIndexToSend=0;   //qui -1
+    private static int oldIndexToSend=0;   // -1
     private static int toCompare = 0;
+
     /// <summary>
-    /// Weights, layer 1
+    /// Weights, layer 1.
     /// </summary>
     private static List<List<double>> W1 = new List<List<double>>();
+
     /// <summary>
-    /// Bias, layer 1
+    /// Bias, layer 1.
     /// </summary>
     private static List<double> B1 = new List<double>();
+
     /// <summary>
-    /// Weights, layer 2
+    /// Weights, layer 2.
     /// </summary>
     private static List<List<double>> W2 = new List<List<double>>();
+
     /// <summary>
-    /// Bias, layer 2
+    /// Bias, layer 2.
     /// </summary>
     private static List<double> B2 = new List<double>();
 
     /// <summary>
-    /// Data dell'ultimo learning effettuato per la configurazione (dataset) selezionata
+    /// Last training for the selected configuration.
     /// </summary>
     public static System.DateTime DateLatestLearning;
 
-    ///Variabile temporanea per leggere valori min e max
+    /// Temp variable to contain min and max.
     private static string[] readText;
+
     /// <summary>
-    /// Il minimo valore per ogni features nel dataset (per scalare)
+    /// Min value for each feature in the dataset.
     /// </summary>
     private static string[] min;
+
     /// <summary>
-    /// Il massimo valore per ogni features nel dataset (per scalare)
+    /// Max value for each feature in the dataset.
     /// </summary>
     private static string[] max;
 
 
-    /// <summary>
-    ///  ReadArraysFromFormattedFile Restituisce una lista di array float. Gli array sono inseriti nella lista nell'ordine in cui vengono letti dal file.
-    ///  La lista è formattata nel seguente modo:
-    /// Finchè leggendo il file vengono letti vettori, allora questi vettori vengono aggiunti alla lista e restituiti.
-    /// Nel momento in cui la funzione capisce di aver letto una matrice, inserisce nella lista un array vuoto [].
+   /// <summary>.
+    /// ReadArraysFromFormattedFile returns a list of float arrays. The arrays are inserted into the list in the order in which they are read from the file.
+    /// The list is formatted as follows:
+    /// - As long as vectors are read from the file, then these vectors are added to the list and returned.
+    /// - As soon as the function realises it has read an array, it inserts an empty array [] into the list.
     ///
-    /// Ad esempio:
-    /// - nel file bias.txt, sono contenuti array. Ogni array rappresenta un bias: 
-    /// Il primo array rappresenta B1; il secondo array B2 etc...
-    ///  
-    ///  - nel file weights.txt, sono contenute matrici, ognuna contiene una lista di array. Quindi tutti gli array contenuti nella lista restituita,
-    /// finchè non si legge un array vuoto [], faranno parte della prima matrice letta.
-    /// In questo modo, si formatta la lista in n blocchi di array, dove n è il numero di matrici contenuti nel file:
-    ///  Tutti gli array contenuti nel primo blocco di array (quelli che si trovano prima del primo array vuoto[]) rappresentano la matrice W1,
-    /// Tutti gli array contenuti nel secondo blocco di array (quelli che si trovano dopo il primo array vuoto[] e prima del secondo array vuoto [])
-    /// rappresentano la matrice W2 
+    /// For example:
+    /// - in the file bias.txt, arrays are contained. Each array represents a bias:
+    /// The first array represents B1; the second array B2 etc...
+    ///
+    /// - in the weights.txt file, arrays are contained, each containing a list of arrays. So all the arrays contained in the returned list,
+    /// as long as an empty array [] is not read, will be part of the first array read.
+    /// In this way, we format the list into n array blocks, where n is the number of arrays contained in the file:
+    /// All arrays contained in the first array block (those found before the first empty array[]) represent the array W1,
+    /// All arrays contained in the second array block (those found after the first empty array[] and before the second empty array [])
+    /// represent array W2
     /// etc...
     /// </summary>
-    /// <param name="name">Nome del file da aprire</param>
+    /// <param name="name">Name of the file to be opened</param>
     /// <returns>
-    /// Una lista di float contenente i numeri letti da file. La lista e formattato logicamente in modo tale da poter costrutire gli eventuali array contenuti nel file.
+    /// A float list containing the numbers read from the file. The list is formatted logically so that any arrays contained in the file can be constructed.
     /// </returns>
-    private static List< List<double> > ReadArraysFromFormattedFile(string name)
-    {
+    private static List< List<double> > ReadArraysFromFormattedFile(string name){
 
-        Debug.Log("name" + name);
-        //stringa
         var text = FileUtils.LoadFile(name);
 
         if (text == null)
@@ -85,28 +88,22 @@ public static class TestML
         text = text.Replace("[", "");
         text = text.Replace("\n", "");
 
-        string[] vettori = text.Split(']');       // StringSplitOptions.RemoveEmptyEntries toglie le entrate vuote (potrebbe servire lasciarle) 
+        string[] vettori = text.Split(']');       // StringSplitOptions.RemoveEmptyEntries remove empty entry
 
-        //lista degli array letti, i valori degli array sono strighe
         List< List <string> > temp = new List< List<string> >();
 
-        foreach (string vettore in vettori)
-        {
-            temp.Add(vettore.Split(' ')                                       //divide per ' ' e mette l'array di stringhe all'interno della lista temp
-                .Select(tag => tag.Trim())                                    //elimina le entrate vuote
+        foreach (string vettore in vettori){
+            temp.Add(vettore.Split(' ')                                       // split by ' '
+                .Select(tag => tag.Trim())                                    // remove empty entry
                 .Where(tag => !string.IsNullOrEmpty(tag)).ToList());
         }
 
-        //lista degli array letti che verrà restituita
         List<List<double>> listOfReadArrays = new List< List<double> >();
 
-
-        //Converte tutti i valori degli array letti, da string a float.
-        foreach ( var arr in temp)
-        {
+        // Convert values from string to float
+        foreach ( var arr in temp){
             double[] t = new double[arr.Count];
-            for (int i = 0; i < arr.Count; i++)
-            {
+            for (int i = 0; i < arr.Count; i++){
                 t[i] = double.Parse(arr[i], CultureInfo.InvariantCulture);
             }
             listOfReadArrays.Add(t.ToList());
@@ -116,12 +113,11 @@ public static class TestML
 
 
     /// <summary>
-    /// Riempe le Matrici W1 ; B1 ; W2; B2.  Legge il file dei minimi e massimi e lo carica in memoria
-    /// Usa il metodo ReadArraysFromFormattedFile, per leggere da un file una lista di arrays di tipo float. 
-    /// Questa lista restituita è formattata logicamente.
+    /// Fills Matrices W1 ; B1 ; W2; B2.  Reads the file of min and max and loads it into memory.
+    /// Uses the ReadArraysFromFormattedFile method to read from a file a list of arrays of type float.
+    /// This returned list is logically formatted.
     /// </summary>
-    public static bool Populate()
-    { 
+    public static bool Populate(){
         B1.Clear(); B2.Clear(); W1.Clear(); W2.Clear();
         
         List<List<double>> biasArrays = ReadArraysFromFormattedFile("bias_out.txt");
@@ -135,238 +131,140 @@ public static class TestML
         if (weightsArrays == null)
             return false;
 
-        
-        //finchè non arrivo ad un array uguale a {} sono array che rappresentano W1
+        // W1
         int j = 0; 
         while (Enumerable.SequenceEqual(weightsArrays.ElementAt(j), new List<double> { } ) == false)
         {
             j++;
         }
 
-        for(int i = 0; i < j ; i++)
-        {
+        for(int i = 0; i < j ; i++){
             W1.Add(weightsArrays.ElementAt(i));     
         }
 
-        //da j+1 alla fine sono array che rappresentano W2
+        // W2
         int k = j+1;
-        while (Enumerable.SequenceEqual(weightsArrays.ElementAt(k), new List<double> { } ) == false)
-        {
+        while (Enumerable.SequenceEqual(weightsArrays.ElementAt(k), new List<double> { } ) == false){
             k++;
         }
 
-        for (int i = 0 ; i < k - (j + 1) ; i++)
-        {
+        for (int i = 0 ; i < k - (j + 1) ; i++){
             W2.Add(weightsArrays.ElementAt(j + 1 + i));
         }
 
-        try
-        {
+        try{
             readText = File.ReadAllLines(FileUtils.GeneratePath("min&max_values_dataset_out.txt"));
-            //primo elemento contiene riga contenente valori min                                                                                           
-            //secondo elemento contiene riga contenente valori max
             min = readText[0].Split(' ');
             max = readText[1].Split(' ');
-           // Debug.Log("MAX==" + max);
-            //Debug.Log("MIN==" + min);
         }
-        catch(Exception)
-        {
-            Debug.LogError("File MinMax non esistente.");
+        catch(Exception){
+            Debug.LogError("MinMax file not exist.");
         }
-
-
         return true;
-        
     }
 
     /// <summary>
-    /// Predice la nota associata alle features passato come parametro.
-    /// Usa le matrici W1, B1, W2 e B2 per effttuare i calcoli.
-    /// Restituisce un indice che va da 0 a 23, corrispondente alla nota da suonare.
-    /// La funzione supporta il caso in cui il dataset contenga meno note rispetto agli indici 0-23. Questo è fatto calcolando in fase di
-    /// computazione la grandezza delle matrici W1, B1, W2, B2.
-    /// Conseguentemente, la funzione ReteNeurale, restituirà indici che si trovano fra il range di note allenate.
+    /// Perform prediction.
+    /// Use matrix W1, B1, W2 e B2 to perform operations.
     /// </summary>
-    /// <param name="features">nota da trovare</param>
-    /// <returns>Id nota trovata</returns>
-    public static int ReteNeurale(float[] features)
-    {
-      for(int i = 0; i < features.Length; i++)
-        {
+    /// <param name="features">Features</param>
+    /// <returns>Predicted note</returns>
+    public static int ReteNeurale(float[] features){
+      for(int i = 0; i < features.Length; i++){
             //Debug.Log("features " + i + "  =" + features[i]);
         }
 
         double[] MyFeatures = new double[36];
 
-
-        //FINE PROVA
         MyFeatures = ScaleValues(features);
-        //float[] scaledFeatures = features;
-       /* for (int i = 0; i < scaledFeatures.Length; i++)
-        {
 
-            MyFeatures[i] = scaledFeatures[i];
-           
-            //Debug.Log("SCALED FEATURES " + i + "    " + MyFeatures[i]);
-        }
-       */
-            
-        // output_hidden1 ha lo stesso numero di elementi di B1 BiasLAYER1
+        // output_hidden1 has same number of elements of B1 BiasLAYER1
         var output_hidden1 = new double[B1.Count];
-        // output_hidden2 ha lo stesso numero di elementi di B2 BIAS LAYR2
+        // output_hidden2 has same number of elements of B2 BIAS LAYER2
         var output_hidden2 = new double[B2.Count];
 
         double x, w, r;
 
-        for (int i = 0; i < output_hidden1.Length; i++)
-        {
+        for (int i = 0; i < output_hidden1.Length; i++){
             output_hidden1[i] += B1.ElementAt(i);
-            //Debug.Log("BIAS LAYER 1 di "+i +" " + output_hidden1[i]);
-            for (int j = 0; j < features.Length; j++)
-            {
+
+            for (int j = 0; j < features.Length; j++){
                 x = MyFeatures[j];
                 w = W1[j][i];
                 r = x * w;
 
                 output_hidden1[i] += r;
-                //Debug.Log("WORKED BIAS LAYER 1 di " + i + " " + output_hidden1[i]);
             }
-
             if (output_hidden1[i] <= 0)
                 output_hidden1[i] = 0;
-            //Debug.Log("==0 this " + i);
         }
 
-        for (int i = 0; i < output_hidden2.Length; i++)
-        {
+        for (int i = 0; i < output_hidden2.Length; i++){
             output_hidden2[i] += B2.ElementAt(i);
-            //Debug.Log("bias2===" + output_hidden2[i]);
-            for (int j = 0; j < output_hidden1.Length; j++)
-            {
+            for (int j = 0; j < output_hidden1.Length; j++){
                 x = output_hidden1[j];
                 w = W2[j][i];
                 r = x * w;
 
                 output_hidden2[i] += r;
-                //Debug.Log("WORKEDbias2===" + output_hidden2[i]);
             }
         }
 
-
-
         double sum = 0;
-        foreach (var item in output_hidden2)
-        {
-            //Debug.Log("ITEM IN OUTPUTHIDDEN2==" + item);
+        foreach (var item in output_hidden2){
             sum += Mathf.Exp((float)item);
         }
 
         var toRet = new double[output_hidden2.Length];
         
-        for (int i = 0; i < output_hidden2.Length; i++)
-        {
-
+        for (int i = 0; i < output_hidden2.Length; i++){
             toRet[i] = Mathf.Exp((float)output_hidden2[i]) / sum;
-           // toRet[i]=Mathf.Exp((float)output_hidden2[i]);
-           // Debug.Log("THIS " + i + "======" + toRet[i]);
         }
 
-
-        //Debug.Log("=========== toRet.max " + toRet.Max());
-        //return toRet.ToList().IndexOf(toRet.Max());
-        var toRetMax = toRet.Max();  //max proba rete neurale
+        var toRetMax = toRet.Max();  // Max probability neural network
         int index=toRet.ToList().IndexOf(toRet.Max());
-       //STAMPA DI PROVA PER L'INDICE toRet
-       /*
-        Debug.Log("In TestML\n");
-        for (int i = 0; i < toRet.Length; i++) {
-            Debug.Log("toRet[i]" + toRet[i]);
-        }
-       */
-        //int toSend = -1;
+
         int toSend=0;
-        if (counter == -1 && toRetMax > 0.9)
-        {
-            //la prima volta setto counter a 0 e old index to send == index
-            Debug.Log("THE FIRST");
+        if (counter == -1 && toRetMax > 0.9){
             counter = 0;
             oldIndexToSend = index;
             toSend= index;
             toCompare = index;
         }
-        Debug.Log("index=" + index + "            old=" + oldIndexToSend);
-        toSend = oldIndexToSend;
-        if (index == toCompare && toRetMax > 0.9)
-        {
 
+        toSend = oldIndexToSend;
+        if (index == toCompare && toRetMax > 0.9){
             counter++;
-            if (counter > delaytime && toRetMax > 0.9)
-            {
+            if (counter > delaytime && toRetMax > 0.9){
                 toSend = toCompare;
                 oldIndexToSend=toCompare;
             }
-        }
-        else
-        {
+        }else{
             counter = 0;
             toCompare = index;
         }
-        /*
-        if (toRetMax > 0.9)
-        {
-            toSend = index;
-            oldIndexToSend = toSend;
-        }
-        */
-        
-
-       
-        Debug.Log("SENDED note " + toSend);
         return toSend;
-
-
-
-        //mio
-        //riconosce le configurazioni delle mani ma non utilizzando la label relativa alla nota e utilizzando solo un array di float 
-        //alla fine restituisce l'indice dell' elemento all' interno della lista con valore max
-        //ma l'indice non corrisponde alla label della nota
-        //TO-DO trovare il punto in cui legge la label
-        //ipotesi: la funzione non legge in alcun modo il file Excell dove sono salvate le label
-        //se in questa fase utilizziamo solo i file bias_out, wieights:out e min&MaxValues non possiamo in alcun modo conoscere la label in quanto non presente
-        //possibile soluzione: salvare nel file weights outative all' output layer
-        //path::   C:\Users\Dan\AppData\LocalLow\DefaultCompany\MarcoSmiles\MyDatasets\DefaultDataset
-
     }
 
 
     /// <summary>
-    /// Scala i valori convertendo le features non scalate in valori tra 0 e 1
+    /// MinMax scaling of the features between 0 and 1.
     /// </summary>
-    /// <param name="unscaledFeatures">features da scalare</param>
-    /// <returns>features scalate con valori tra min e max</returns>
-    private static double[] ScaleValues(float[] unscaledFeatures)
-    {
+    /// <param name="unscaledFeatures">Features</param>
+    /// <returns>Scaled features</returns>
+    private static double[] ScaleValues(float[] unscaledFeatures){
         var scaledFeatures = new double[unscaledFeatures.Length];
         var minValues = new double[unscaledFeatures.Length];
         var maxValues = new double[unscaledFeatures.Length];
         
-        for (int i = 0; i < unscaledFeatures.Length; i++)
-        {
-            
+        for (int i = 0; i < unscaledFeatures.Length; i++){
             minValues[i] = double.Parse(min[i], CultureInfo.InvariantCulture);
             maxValues[i] = double.Parse(max[i], CultureInfo.InvariantCulture);
-            //Debug.Log("MIN" + i + "==" + minValues[i] + "   MAX" + i + "==" + maxValues[i]);
         }
         var work = new double[unscaledFeatures.Length];
-        for (int i = 0; i < unscaledFeatures.Length; i++)
-        {
+        for (int i = 0; i < unscaledFeatures.Length; i++){
             scaledFeatures[i] = (unscaledFeatures[i] - minValues[i]) / (maxValues[i] - minValues[i]);
-            
-
-
         }
-
         return scaledFeatures;
     }
 }

@@ -7,131 +7,95 @@ using Sanford.Multimedia.Midi;
 using System;
 
 
-public class tesi
-{
+public class tesi{
 
-
-    
     private OutputDevice outD;
     private ChannelMessageBuilder builder;
 
-    public tesi()
-    {
-
-    }
+    public tesi(){}
 
     /// <summary>
-    /// Permette di inviare un segnale Midi di Note On al dispositivo di output
+    /// Send signal Midi Note On to output device.
     /// </summary>
-    /// <param name="note">Rappresenta l' indice della  nota da inviare</param>
-    /// <param name="octave">Rappresenta il numero dell'ottava </param>
-    public void SendEvent(int note, int octave)
-    {
-        //-----Creazione del Messaggio MIDI da inviare ---
-      
-        //Data1 rappresenta il primo Data byte
-        //in questo caso la nota da "suonare"
+    /// <param name="note">Note to send</param>
+    /// <param name="octave">Octave</param>
+    public void SendEvent(int note, int octave){
 
+        // Note
         builder.Data1 = note + (octave * 12);
 
-        //Data2 rappresenta il secondo Data byte
-        //in questo caso la velocity
+        // Velocity
         builder.Data2 = 105;
 
-        //Assegno il System Byte
         //Most Significant Bit
-        //in questo caso il segnale di NoteOn (1001)
+        //Signal NoteOn (1001)
         builder.Command = ChannelCommand.NoteOn;
 
         //Least Significant Bit
-        //MidiChannel rappresente il canale Midi (0-15) a cui inviare il messaggio 
+        //MidiChannel (0-15)
         builder.MidiChannel = 0;
 
-        //Quindi il System Byte inviato sarà il seguente 
+        // System Byte
         // MSB | LSB
         //1001 | 0000
 
-      
-        //assemblo il messaggio
+        // Build message
         builder.Build();
 
-        //invio il messaggio al dispositivo di output
+        // Send message
         outD.Send(builder.Result);
 
     }
 
     /// <summary>
-    /// Ricerca il dispositivo di output associato a MarcoSmiles
+    /// Search MarcoSmiles device
     /// </summary>
-    public void FindMidi()
-    {
+    public void FindMidi(){
         int DevId = 0;
 
-        //Ricavo il numero totale di Output Device
         int numDevice = OutputDevice.DeviceCount;
-       
 
-        for (int i = 0; i < numDevice; i++)
-        {
-            //Ricavo il nome del della porta MIDI associata al dispositivo
+        for (int i = 0; i < numDevice; i++){
+
             MidiOutCaps dev = OutputDevice.GetDeviceCapabilities(i);
-           
-            //trovo l'ID della porta
-            if (dev.name == "MarcoSmiles")
-            {
-                DevId = i;
-               
 
+            if (dev.name == "MarcoSmiles"){
+                DevId = i;
             }
         }
-
-
-        //seleziono L'output Device e inizializzo Il MessageBuilder
         outD = new OutputDevice(DevId);
         builder = new ChannelMessageBuilder();
-
     }
 
-
     /// <summary>
-    /// Permette di inviare un segnale Midi di Note Off al dispositivo di output
+    /// Send signal Midi Note Off to output device.
     /// </summary>
-    /// <param name="note">Rappresenta l' indice della  nota da "rilasciare"</param>
-    /// <param name="octave">Rappresenta il numero dell'ottava </param>
+    /// <param name="note">Note</param>
+    /// <param name="octave">Octave</param>
+    public void SendMidiOff(int note, int octave){
 
-    public void SendMidiOff(int note, int octave)
-    {
-
-        //-----Creazione del Messaggio MIDI da inviare---
-
-        //Data1 rappresenta il primo Data byte
-        //in questo caso la nota da "rilasciare"
+        // Note to release
         builder.Data1 = (note + (octave * 12));
 
-        //Data2 rappresenta il secondo Data byte
-        //in questo caso la velocity di rilascio
+        // Velocity
         builder.Data2 = 0;
 
-
-        //Assegno il System Byte
-        //Most Significant Bit
-        //in questo caso il segnale di NoteOff (1000)
+        // Most Significant Bit
+        // NoteOff (1000)
         builder.Command = ChannelCommand.NoteOff;
 
         //Least Significant Bit
-        //MidiChannel rappresente il canale Midi (0-15) a cui inviare il messaggio 
+        //MidiChannel (0-15)
         builder.MidiChannel = 0;
 
-        //Quindi il System Byte inviato sarà il seguente 
+        // System Byte
         // MSB | LSB
         //1000 | 0000
 
-        //assemblo il messaggio
+        // Build Message
         builder.Build();
 
-        //invio il messaggio al dispositivo di output
+        // Send message
         outD.Send(builder.Result);
-
     }
-
 }
