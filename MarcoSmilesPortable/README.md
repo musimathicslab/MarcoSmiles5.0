@@ -2,34 +2,19 @@
 
 *N.B. This section is for developers only!*
 
-- Python 3.7.9;
+- Python 3.9.13;
   - numpy 1.18.0;
   - pandas 1.1.4;
   - [pythonnet](https://github.com/pythonnet/pythonnet).
 - [LoopMidi](https://www.tobias-erichsen.de/software/loopmidi.html). Create a virtual MIDI port with the name `MarcoSmiles` (it's essential to give this name to the port in order to give the possibility to the MIDI management module to find this virtual MIDI port).
+- [LeapMotion SDK v5.12](https://developer.leapmotion.com/tracking-software-download);
 
-## How to use Leap Developer Kit 2.3.1+31549 Windows
+## How to use LeapSDK with Python
 
-_References: https://support.leapmotion.com/hc/en-us/articles/360004362237-Generating-a-Python-3-3-0-Wrapper-with-SWIG-2-0-9_
+_References: https://github.com/seanschneeweiss/RoSeMotion_
+Unfortunately there's no official Python wrapper for Gemini V5. You’ll have to write Python bindings to the LeapC API.
 
-1. Download the kit from this [link](https://api.leapmotion.com/v2?id=skeletal-beta&platform=windows&version=2.3.1.31549).
-2. Install the `.exe` file in the folder.
-3. Since the LeapSDK does not currently support Python3, we have to compile the library with our version of Python. _N.B It only works with the version of Python used during compilation._
-To do that execute the following steps, otherwise if you want to use python 3.7 go directly to step 10 and download those files from the `MarcoSmilesPortable` folder.
-   1. Install Visual Studio 2019 (with Desktop development with C++ workload) and [Swig 3.0.3](https://www.swig.org/download.html). To work with swig create a Path system variable. 
-   2. Create an empty C++ project. Copy `Leap.h`, `LeapMath.h`, `Leap.i`, and `Leap.lib` (x64) into this project folder.
-   3. Run SWIG from that folder to generate `LeapPython.cpp`.
-   ```
-   swig -c++ -python -o LeapPython.cpp -interface LeapPython Leap.i
-   ```
-   4. Open project properties, select Release configuration and set `x64` as target. Go to the `Configuration Properties -> General page`. From there, set the `Target Name` to "LeapPython" and set the `Configuration Type` to "Dynamic Library (.dll)".<br><br><p align="center"><img src="../readme_images/sdk_python3_1.png"/></p>
-   5. Go to the `C/C++ -> General` property page. Add the path containing `Python.h`, typically C:\path\Python37\include.<br><br><p align="center"><img src="../readme_images/sdk_python3_2.png"/></p>
-   6. Go to the `Linker -> Input` property page. Add `Leap.lib` path and the full path to `python37.lib`, typically C:\path\Python37\libs\python37.lib.<br><br><p align="center"><img src="../readme_images/sdk_python3_3.png"/></p>
-   7. Go to `C/C++ -> Preprocessor` property page and add `_CRT_SECURE_NO_WARNINGS` to preprocessor definitions.<br><br><p align="center"><img src="../readme_images/sdk_python3_4.png"/></p>
-   8. Build the project with a `x64` configuration.<br><br><p align="center"><img src="../readme_images/sdk_python3_5.png"/></p>
-   9. Rename the output `LeapPython.dll` to `LeapPython.pyd`.
-   10. Finally, you can copy the files `LeapPython.pyd`, `Leap.py` and `Leap.dll` in a new folder to use them in any project.
-
+You can find all the necessary files (/lib, Leap.py, LeapC++.dll, LeapC.dll, LeapPython.pyd) in the `MarcoSmilesPortable` folder.
    
 ## Create/Modify DLL for MidiLib
 This section is useful for creating a customised Midi library. If you do not want to modify the version we created, you can find the result of the next steps in `MarcoSmilesPortable/ddls`.
