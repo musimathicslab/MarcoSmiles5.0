@@ -7,62 +7,32 @@
   - pandas 2.0.2;
 
 
-## How to install Leap Developer Kit 2.3.1+31549
+## How to use Leap Developer Kit 2.3.1+31549 Windows
 
-1. Download the kit from this [link](https://www2.leapmotion.com/v2-developer-beta-linux).
-2. In your terminal execute the following instructions.
-    ```
-    sudo dpkg--install Leap-2.3.1+31549-×64.deb
-    ```
-   
-    If you got this error use the following command.
+_References: https://support.leapmotion.com/hc/en-us/articles/360004362237-Generating-a-Python-3-3-0-Wrapper-with-SWIG-2-0-9_
 
-    <p align="center"><img src="../readme_images/kit_error_1.png"/></p>
-    
+1. Download the kit from this [link](https://api.leapmotion.com/v2?id=skeletal-beta&platform=windows&version=2.3.1.31549).
+2. Install the `.exe` file in the folder.
+3. Since the LeapSDK does not currently support Python3, we have to compile the library with our version of Python. _N.B It only works with the version of Python used during compilation._
+To do that execute the following steps:
+   1. Install Visual Studio 2019 (with Desktop development with C++ workload) and [Swig 3.0.3](https://www.swig.org/download.html). To work with swig create a Path system variable. 
+   2. Create an empty C++ project. Copy `Leap.h`, `LeapMath.h`, `Leap.i`, and `Leap.lib` (x64) into this project folder.
+   3. Run SWIG from that folder to generate `LeapPython.cpp`.
    ```
-    sudo apt-get install libgl1-mesa-glx
-    ```
-4. Start the daemon using the following command.
-    ```
-    sudo leapd
-    ```
-   
-    To use GUI run in another terminal:
-    ```
-    LeapControlPanel
-    ```
-   
+   swig -c++ -python -o LeapPython.cpp -interface LeapPython Leap.i
+   ```
+   4. Open project properties, select Release configuration and set `x64` as target. Go to the `Configuration Properties -> General page`. From there, set the `Target Name` to "LeapPython" and set the `Configuration Type` to "Dynamic Library (.dll)".<br><br><p align="center"><img src="../readme_images/sdk_python3_1.png"/></p>
+   5. Go to the `C/C++ -> General` property page. Add the path containing `Python.h`, typically C:\path\Python37\include.<br><br><p align="center"><img src="../readme_images/sdk_python3_2.png"/></p>
+   6. Go to the `Linker -> Input` property page. Add `Leap.lib` path and the full path to `python37.lib`, typically C:\path\Python37\libs\python37.lib.<br><br><p align="center"><img src="../readme_images/sdk_python3_3.png"/></p>
+   7. Go to `C/C++ -> Preprocessor` property page and add `_CRT_SECURE_NO_WARNINGS` to preprocessor definitions.<br><br><p align="center"><img src="../readme_images/sdk_python3_4.png"/></p>
+   8. Build the project with a `x64` configuration.<br><br><p align="center"><img src="../readme_images/sdk_python3_5.png"/></p>
+   9. Rename the output `LeapPython.dll` to `LeapPython.pyd`.
+   10. Finally, you can copy the files `LeapPython.pyd`, `Leap.py` and `Leap.dll` in a new folder to use them in any project.
 
-## Configure the LeapMotion SDK to work with Python3.8 [link](https://forums.leapmotion.com/t/leap-motion-sdk-with-python-3-5-in-linux-tutorial/5249/7)
-1. Create a new folder `MarcoSmiles5.0` in the folder `LeapSDK` of the Leap Developer Kit.
-2. Copy the libraries and a sample scripts in the  `MarcoSmiles5.0` folder.
-    ```
-   cp -a lib/x64/libLeap.so lib/Leap.py samples/Sample.py MarcoSmiles5.0/
-    ```
-3. Install some necessary packages.
-    ```
-   sudo apt-get install swig g++ libpython3.8-dev
-    ```
-4. Download the patch file and apply it.
-    ```
-    wget http://tinyurl.com/leap-i-patch -O Leap.i.diff
-    ```
-   ```
-    patch -p0 < Leap.i.diff
-    ```
-5. Create the interface between C++ and Python.
-   ```
-    swig -c++ -python -o /tmp/LeapPython.cpp -interface LeapPython include/Leap.i
-    ```
-6. Compile the library.
-   ```
-   g++ -fPIC -I/usr/include/python3.8 -I./include /tmp/LeapPython.cpp lib/x64/libLeap.so -shared -o MarcoSmiles5.0/LeapPython.so
-    ```
-7. You can run any Python file placed in MarcoSmiles5.0 in this way.
-     ```
-    LD_PRELOAD=./libLeap.so MarcoSmiles5.0 Sample.py
-     ```
-   
+
+
+
+
 ## Create/Modify DLL for MidiLib
    
 1. Install Visual Studio 
