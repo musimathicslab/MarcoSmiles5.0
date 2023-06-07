@@ -1,7 +1,7 @@
 # MarcoSmiles v5.0 :musical_keyboard: :saxophone:
-MarcoSmiles is a project born in 2016 within the Musimathics Laboratory of the University of Salerno that aims to realise new Human-Computer Interaction techniques for musical performances. 
-
-In particular, by using a gesture recognition module to associate hand positions with musical notes, MarcoSmiles actually realises a virtual musical instrument.
+MarcoSmiles is a project born in 2016 within the Musimathics Laboratory of the University of Salerno that aims to realise new Human-Computer Interaction techniques for musical performances.
+It offers the ability to fully customize the way a virtual musical instrument is played with only basic hand movements. It uses a Leap Motion Controller to track the user's hand position and a suitably trained artificial neural network (ANN) to link that position to a note in real time.
+It also features a MIDI management module that ensures MarcoSmiles can be used with any device with a midi interface.
 
 <br><br>
 *New features compared to version 4.0:*

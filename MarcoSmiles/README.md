@@ -1,3 +1,7 @@
+
+
+
+
 # Installation on Windows
 
 *N.B. This section is for developers only!*
@@ -33,4 +37,3 @@
 8. Change the resolution to `1280x960`.
 
 
-    
