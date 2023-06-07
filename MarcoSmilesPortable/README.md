@@ -3,15 +3,16 @@
 *N.B. This section is for developers only!*
 
 - Python 3.9.13;
-  - numpy 1.18.0;
-  - pandas 1.1.4;
+  - numpy 1.24.3;
+  - pandas 2.0.2;
   - [pythonnet](https://github.com/pythonnet/pythonnet).
 - [LoopMidi](https://www.tobias-erichsen.de/software/loopmidi.html). Create a virtual MIDI port with the name `MarcoSmiles` (it's essential to give this name to the port in order to give the possibility to the MIDI management module to find this virtual MIDI port).
 - [LeapMotion SDK v5.12](https://developer.leapmotion.com/tracking-software-download);
 
 ## How to use LeapSDK with Python
 
-_References: https://github.com/seanschneeweiss/RoSeMotion_
+_References: https://github.com/seanschneeweiss/RoSeMotion_.
+
 Unfortunately there's no official Python wrapper for Gemini V5. You’ll have to write Python bindings to the LeapC API.
 
 You can find all the necessary files (/lib, Leap.py, LeapC++.dll, LeapC.dll, LeapPython.pyd) in the `MarcoSmilesPortable` folder.
