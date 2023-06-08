@@ -49,6 +49,22 @@ This section is useful for creating a customised Midi library. If you do not wan
    In order to use this class you need to create a virtual port named `MarcoSmiles` on LoopMidi software.
    You can check if it is working correctly using a DAW (for example [FLStudio](https://www.image-line.com/)), selecting the MarcoSmiles MIDI port and running the script Dlltest.py.
 
+## How the import of a dataset work
+Exporting the dataset from MarcoSmiles generates the following directory.
+
+<p align="center"><img src="../readme_images/DatasetExported.png"/></p>
+
+Since the portable system allows the use of only one leap motion, the neural network has been suitably modified to perform, starting from a dataset made by using 2 leap motions, the training of a model to be used with only one device.  
+Many of these files are not necessary for the operation of marcoSmiles portable and it is therefore necessary to clean the directory of unused files to lighten the system as much as possible.
+The predict.py script needs only the following files:
+
+- lbl_notes.txt 
+- min&max_values_dataset_out_1H.txt
+- model_1H.pkl
+
+Therefore, a function in `predict.py` (_clean_dataset_dir()_) has been created to selects the files needed for the system to work and moves them to the utils folder. It then permanently deletes the imported dataset folder.
+
+
 
 ## Use MarcoSmiles Portable
 1. Download the portable version of MarcoSmiles placed in `MarcoSmilesPortable`.
