@@ -52,7 +52,7 @@ This section is useful for creating a customised Midi library. If you do not wan
 ## How the import of a dataset work
 Exporting the dataset from MarcoSmiles generates the following directory.
 
-<p align="center"><img src="../readme_images/DatasetExported.png"/></p>
+<p align="center"><img src="../readme_images/exported_dataset.png"/></p>
 
 Since the portable system allows the use of only one leap motion, the neural network has been suitably modified to perform, starting from a dataset made by using 2 leap motions, the training of a model to be used with only one device.  
 Many of these files are not necessary for the operation of marcoSmiles portable and it is therefore necessary to clean the directory of unused files to lighten the system as much as possible.
