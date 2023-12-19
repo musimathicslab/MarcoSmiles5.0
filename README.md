@@ -16,11 +16,18 @@ MarcoSmiles 5.0 is a desktop application with a graphical user interface. Make s
 <p align="center"><img src="readme_images/main_scene.png"/></p>
 The Main Scene is the home page of the system. At the top is the logo of MarcoSmiles and below it the various buttons that allow you to navigate the different screens of the system. It will not be possible to access the Play Scene (Play Scene) without having previously trained the system.
 
-At the bottom there is a section that provides access to functions related to the system configurations, which, through buttons, allows you to change, import and export configurations previously made by the user:
+at the top right there is a button that allows access to the dataset management scene.
+
+### Dataset scene
+<p align="center"><img src="readme_images/dataset_scene.png"/></p>
+
+The Dataset scene deals with the management of datasets and is presented through a scrollmenu that contains clickable cards. Each card is associated with a dataset present in the application and contains all the information relating to the dataset and its configurations. Furthermore, there are two buttons on each card that allow you to modify and delete its contents. By clicking on the card, you can select the dataset.
+
+The scene also includes three other buttons: one at the top right for adding a new dataset, and two buttons at the bottom that deal with importing and exporting datasets.
+
 - To export a dataset you need to press "_export dataset_" button. At this point select the desired dataset and save it. Then you can use it into MarcoSmiles5.0 or into MarcoSmiles Portable;
   - To import the configuration in MarcoSmiles portable you need to copy and paste the exported dataset you want to use. This must be done before using MarcoSmiles Portable so that the dataset can be processed by the system;
 - To import the configuration in MarcoSmiles5.0 select "_import dataset_" button. Choose the dataset you wish to import and confirm. (_You can check the dataset you are using on the main page_).
-
 
 ### Training Scene
 <p align="center"><img src="readme_images/training_scene.png"/></p>
