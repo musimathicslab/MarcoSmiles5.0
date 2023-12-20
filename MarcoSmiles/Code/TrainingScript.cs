@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Threading.Tasks;
+using System.IO;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -8,6 +9,12 @@ using UnityEngine.UI;
 /// Training process.
 /// </summary>
 public class TrainingScript : MonoBehaviour{
+
+    public Camera targetCamera;
+    public string outputPath;
+
+    string[] nameNotes = { "C1", "C#1", "D1", "D#1", "E1", "F1", "F#1", "G1", "G#1", "A1", "A#1", "B1", "C2", "C#2", "D2", "D#2", "E2", "F2", "F#2", "G2", "G#2", "A2", "A#2", "B2", "PAUSE" };
+
     /// <summary>
     /// Number of recording for each position.
     /// </summary>
@@ -156,6 +163,8 @@ public class TrainingScript : MonoBehaviour{
 
     public async Task<bool> RemoveNote(){
         await FileUtils.DeleteRowsNote(currentNoteId);
+        // elimina foto
+        File.Delete(FileUtils.GeneratePath(nameNotes[currentNoteId] + ".png"));
         return true;
     }
 
@@ -203,6 +212,11 @@ public class TrainingScript : MonoBehaviour{
     /// </summary>
     /// <returns>yield</returns>
     IEnumerator WaiterRecording(){
+        if (record_count == 450)
+        {
+            //scatta foto 
+            CapturePhoto();
+        }
         if (record_count > 0){
             record_count--;
             recording_Text.text = record_count.ToString();
@@ -229,4 +243,38 @@ public class TrainingScript : MonoBehaviour{
             Button.GetComponent<Light>().range = 0;
         }
     }
+
+    public void CapturePhoto()
+    {
+        // Salva la RenderTexture attiva 
+        RenderTexture currentRT = RenderTexture.active;
+
+        // sostituisce la RenderTexture attiva con la RenderTexture della camera 
+        RenderTexture.active = targetCamera.targetTexture;
+
+        // se non esiste crea la cartella CapturedPhoto all'interno della phat del dataset corrente
+        DirectoryInfo di = new DirectoryInfo(FileUtils.GeneratePath("CapturedPhoto"));
+        if (!di.Exists) 
+            di.Create();  
+
+        // genera la phat dove successivamente verra salvata l'immagine con il nome della nota 
+        outputPath = FileUtils.GeneratePath(di.Name+"/"+nameNotes[currentNoteId]+".png");
+
+        // forza la camera ad eseguire il rendering
+        targetCamera.Render();
+
+        //crea una Texture2D partendo dalla RenderTexture della camera 
+        Texture2D photo = new Texture2D(targetCamera.targetTexture.width, targetCamera.targetTexture.height);
+        photo.ReadPixels(new Rect(0, 0, targetCamera.targetTexture.width, targetCamera.targetTexture.height), 0, 0);
+        photo.Apply();
+
+        // ripristina la RenderTexture attiva
+        RenderTexture.active = currentRT;
+
+        // Salva l'immagine come file PNG
+        byte[] bytes = photo.EncodeToPNG();
+        File.WriteAllBytes(outputPath, bytes);
+    }
+
+
 }

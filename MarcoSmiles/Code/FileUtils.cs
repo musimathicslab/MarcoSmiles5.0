@@ -71,7 +71,7 @@ public static class FileUtils{
     /// <param name="filename">Filename</param>
     /// <param name="folder">Folder name</param>
     /// <returns></returns>
-    private static string GeneratePath(string filename, string folder){
+    public static string GeneratePath(string filename, string folder){
         return $"{path}/{folderName}/{folder}/{filename}";
     }
 
@@ -353,6 +353,26 @@ public static class FileUtils{
                 File.Copy($"{path}/{folderName}/ML.py",GeneratePath("ML.py"));
 
             if (!File.Exists(GeneratePath("bias_out.txt")) || !File.Exists(GeneratePath("weights_out.txt"))){
+                return false;
+            }
+        }
+        return true;
+    }
+
+    public static bool CheckForDefaultFiles(String folder)
+    {
+        if (!Directory.Exists(GeneratePath("",folder)))
+        {
+            Directory.CreateDirectory(GeneratePath("", folder));
+            return false;
+        }
+        else
+        {
+            if (!File.Exists(GeneratePath("ML.py", folder)))
+                File.Copy($"{path}/{folderName}/ML.py", GeneratePath("ML.py", folder));
+
+            if (!File.Exists(GeneratePath("bias_out.txt", folder)) || !File.Exists(GeneratePath("weights_out.txt", folder)))
+            {
                 return false;
             }
         }

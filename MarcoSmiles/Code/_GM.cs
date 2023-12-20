@@ -149,7 +149,8 @@ public class _GM : MonoBehaviour{
         MainPage,
         PlayScene,
         TrainingScene,
-        TestingScene
+        TestingScene,
+        SelectDatasetScene
     }
 
     /// <summary>
@@ -161,7 +162,7 @@ public class _GM : MonoBehaviour{
     /// Scene object to modify current scene.
     /// </summary>
     private Scene currentScene;
-    private GameObject pauseButton;
+    private static GameObject pauseButton;
     private AsyncOperation loadingOperation0;
     
 
@@ -206,6 +207,10 @@ public class _GM : MonoBehaviour{
                 currSceneEnum = SceneEnum.TestingScene;
                 Debug.Log("Current scene: " + currSceneEnum);
                 break;
+            case (4):
+                currSceneEnum = SceneEnum.SelectDatasetScene;
+                Debug.Log("Current scene: " + currSceneEnum);
+                break;
         }
 
         //  Current scene Main Page
@@ -230,6 +235,8 @@ public class _GM : MonoBehaviour{
         if (currSceneEnum == SceneEnum.TestingScene){
             TestML.Populate();
         }
+
+        if (currSceneEnum == SceneEnum.SelectDatasetScene) { }
     }
 
     void Start(){
@@ -253,6 +260,10 @@ public class _GM : MonoBehaviour{
                 break;
             case (3):
                 currSceneEnum = SceneEnum.TestingScene;
+                Debug.Log("Current scene: " + currSceneEnum);
+                break;
+            case (4):
+                currSceneEnum = SceneEnum.SelectDatasetScene;
                 Debug.Log("Current scene: " + currSceneEnum);
                 break;
         }
@@ -314,7 +325,7 @@ public class _GM : MonoBehaviour{
                 // Perform prediction
                 indexPlayingNote = Mylabel[TestML.ReteNeurale(current_Features)];
 
-                Debug.Log("Actual Note " + indexPlayingNote);
+                //Debug.Log("Actual Note " + indexPlayingNote);
 
                 // Update keyboard piano with the current note
                 ChangeColor(indexPreviousNote, indexPlayingNote);
@@ -523,7 +534,7 @@ public class _GM : MonoBehaviour{
     /// <summary>
     /// Highlight all trained notes.
     /// </summary>
-    public void UpdateButtonsKeyboard(){
+    public static void UpdateButtonsKeyboard(){
         ResetColorNotes();
         GameObject[] z;
         GameObject[] y = new GameObject[24];
@@ -545,7 +556,7 @@ public class _GM : MonoBehaviour{
     /// <summary>
     /// Reset color on keyboard.
     /// </summary>
-    public void ResetColorNotes(){
+    public static void ResetColorNotes(){
         //Pause Old click
         if (pauseButton != null){
             pauseButton.GetComponent<MeshRenderer>().material = Resources.Load("TransparentBlue", typeof(Material)) as Material;
@@ -621,6 +632,12 @@ public class _GM : MonoBehaviour{
     public void NavigateToTrainingtScene(){
         SceneManager.LoadScene(2);
         currSceneEnum = SceneEnum.TrainingScene;
+    }
+
+    public void NavigateToSelectDatasetScene()
+    {
+        SceneManager.LoadScene(4);
+        currSceneEnum = SceneEnum.SelectDatasetScene;
     }
 
     #endregion

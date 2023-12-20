@@ -38,7 +38,7 @@ public class MS_LeapListener : MonoBehaviour{
         Frame frame = f;
 
         // Check if both hands are detected by the LeapMotion device.
-        Debug.Log(frame.Hands.Count);
+        //Debug.Log(frame.Hands.Count);
         if (frame.Hands.Count > 1){
             _GM.isActive = true;  //Must play
 
@@ -63,7 +63,6 @@ public class MS_LeapListener : MonoBehaviour{
 
         Frame frame = f;
         // Check if both hands are detected by the LeapMotion device.
-        Debug.Log(frame.Hands.Count);
         if (frame.Hands.Count > 1){
             _GM.isActive = true; //Must play
 
