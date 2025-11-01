@@ -80,7 +80,12 @@ There is also a button to enable/disable the MIDI feature, which, when activated
 
 Next to the window in which the hands are displayed is the section dedicated to controlling the parameters of the Virtual Synth, which has the characteristic of being totally customizable, and thus allows the timbre of the sound to be changed and modulations, filters and effects to be added. Thanks to a graphical interface based on Knobs, which attempt to simulate the potentiometers of a real synthesizer, the you will be able to vary the parameters of the Synth.
 
+[![Watch the video](readme_images/play_scene.png)](https://drive.google.com/file/d/16SmEtO0M_kDU3Nr-sK38A6QsHcirsray/view?usp=sharing)
+
+
 <p align="center"><img src="readme_images/synth.png"/></p>
+
+
 
 ## Developed by
 [Salerno Daniele](https://github.com/DanieleSalerno)<br>
